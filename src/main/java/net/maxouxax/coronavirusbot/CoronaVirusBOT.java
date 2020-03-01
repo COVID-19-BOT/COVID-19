@@ -10,6 +10,8 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class CoronaVirusBOT  {
 
@@ -30,14 +32,20 @@ public class CoronaVirusBOT  {
         TwitterFactory tf = new TwitterFactory(cb.build());
         Twitter twitter = tf.getInstance();
         System.out.println("Connected to Twitter API succesfully !");
-        System.out.println("Tweeting...");
+        System.out.println("Computing data for Twitter...");
         String totalCases = webData.get(0).text();
         String totalDeaths = webData.get(1).text();
         String totalRecovered = webData.get(2).text();
+        int currentCasesInt = Integer.parseInt(totalCases.replace(",",""))-Integer.parseInt(totalDeaths.replace(",",""))-Integer.parseInt(totalRecovered.replace(",",""));
+        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
+        String currentCases = formatter.format(currentCasesInt);
+        System.out.println("Data computed!");
         System.out.println(totalCases+" people got infected");
+        System.out.println(currentCases+" people are currently infected");
         System.out.println(totalDeaths+" people died");
         System.out.println(totalRecovered+" people got recovered");
-        String generatedTweet = "CoronaVirus Update:\n☢️ Infected: "+totalCases+" ☢️\n⚰️ Deaths: "+totalDeaths+" ⚰️\n\uD83C\uDFE5 Recovered: "+totalRecovered+" \uD83C\uDFE5\n\n#CoronaVirus #Covid_19\nSource: https://worldometers.info/coronavirus/";
+        System.out.println("Tweeting...");
+        String generatedTweet = "CoronaVirus Update:\n☢️ Total cases: "+totalCases+" ☢️\n⚠️ Current cases: "+currentCases+" ⚠️\n⚰️ Deaths: "+totalDeaths+" ⚰️\n\uD83C\uDFE5 Recovered: "+totalRecovered+" \uD83C\uDFE5\n\n#CoronaVirus #Covid_19\nSource: https://worldometers.info/coronavirus/";
         twitter.updateStatus(generatedTweet);
         System.out.println("Done!");
     }
