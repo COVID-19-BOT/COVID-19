@@ -48,6 +48,7 @@ public class CoronaVirusBOT  {
         String generatedTweet = "CoronaVirus Update:\n☢️ Total cases: "+totalCases+" ☢️\n⚠️ Current cases: "+currentCases+" ⚠️\n⚰️ Deaths: "+totalDeaths+" ⚰️\n\uD83C\uDFE5 Recovered: "+totalRecovered+" \uD83C\uDFE5\n\n#CoronaVirus #Covid_19\nSource: https://worldometers.info/coronavirus/";
         twitter.updateStatus(generatedTweet);
         System.out.println("Done!");
+
     }
 
     private static void loadConfig() {
