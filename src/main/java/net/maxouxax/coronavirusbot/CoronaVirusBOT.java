@@ -66,7 +66,8 @@ public class CoronaVirusBOT  {
         }
 
         System.out.println("Tweeting...");
-        String generatedTweet = "Coronavirus Update:\n☣️️ Total cases: "+totalCases+" ("+(diffTotalCases >= 0 ? "+"+diffTotalCases : diffTotalCases)+") ☣️️\n⚠️ Current cases: "+currentCases+" ("+(diffCurrentCases >= 0 ? "+"+diffCurrentCases : diffCurrentCases)+") ⚠️\n⚰️ Deaths: "+totalDeaths+" ("+(diffTotalDeaths >= 0 ? "+"+diffTotalDeaths : diffTotalDeaths)+") ⚰️\n\uD83C\uDFE5 Recovered: "+totalRecovered+" ("+(diffTotalRecovered >= 0 ? "+"+diffTotalRecovered : diffTotalRecovered)+") \uD83C\uDFE5\n\n(+/-X) : +/-X cases since last tweet\n#Coronavirus #COVID-19\nSource: https://worldometers.info/coronavirus/";
+        String delay = (configurationManager.isSet("delayString") ? configurationManager.getStringValue("delayString") : "unknown");
+        String generatedTweet = "Coronavirus Update:\n☣️️ Total cases: "+totalCases+" ("+(diffTotalCases >= 0 ? "+"+diffTotalCases : diffTotalCases)+") ☣️️\n⚠️ Current cases: "+currentCases+" ("+(diffCurrentCases >= 0 ? "+"+diffCurrentCases : diffCurrentCases)+") ⚠️\n⚰️ Deaths: "+totalDeaths+" ("+(diffTotalDeaths >= 0 ? "+"+diffTotalDeaths : diffTotalDeaths)+") ⚰️\n\uD83C\uDFE5 Recovered: "+totalRecovered+" ("+(diffTotalRecovered >= 0 ? "+"+diffTotalRecovered : diffTotalRecovered)+") \uD83C\uDFE5\n\nUpdated every "+delay+"\n#Coronavirus #COVID19 #COVIDー19\nSource: https://worldometers.info/coronavirus/";
         twitter.updateStatus(generatedTweet);
 
         System.out.println(generatedTweet);
