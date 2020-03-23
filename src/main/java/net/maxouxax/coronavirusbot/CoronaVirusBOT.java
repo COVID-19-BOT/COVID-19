@@ -36,19 +36,48 @@ public class CoronaVirusBOT  {
         String totalCases = webData.get(0).text();
         String totalDeaths = webData.get(1).text();
         String totalRecovered = webData.get(2).text();
-        int currentCasesInt = Integer.parseInt(totalCases.replace(",",""))-Integer.parseInt(totalDeaths.replace(",",""))-Integer.parseInt(totalRecovered.replace(",",""));
+
+        Integer totalCasesInt = stringToInt(totalCases);
+        Integer totalDeathsInt = stringToInt(totalDeaths);
+        Integer totalRecoveredInt = stringToInt(totalRecovered);
+        Integer currentCasesInt = totalCasesInt-totalDeathsInt-totalRecoveredInt;
+
         NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
         String currentCases = formatter.format(currentCasesInt);
+
         System.out.println("Data computed!");
         System.out.println(totalCases+" people got infected");
         System.out.println(currentCases+" people are currently infected");
         System.out.println(totalDeaths+" people died");
         System.out.println(totalRecovered+" people got recovered");
-        System.out.println("Tweeting...");
-        String generatedTweet = "CoronaVirus Update:\n☢️ Total cases: "+totalCases+" ☢️\n⚠️ Current cases: "+currentCases+" ⚠️\n⚰️ Deaths: "+totalDeaths+" ⚰️\n\uD83C\uDFE5 Recovered: "+totalRecovered+" \uD83C\uDFE5\n\n#CoronaVirus #Covid_19\nSource: https://worldometers.info/coronavirus/";
-        twitter.updateStatus(generatedTweet);
-        System.out.println("Done!");
 
+        System.out.println("Getting last data");
+        long diffTotalCases = 0;
+        long diffTotalDeaths = 0;
+        long diffTotalRecovered = 0;
+        long diffCurrentCases= 0;
+        if(!configurationManager.isSet("totalCases")){
+            System.out.println("Oops, no past data found...");
+        }else {
+            diffTotalCases = totalCasesInt - configurationManager.getLongValue("totalCases");
+            diffTotalDeaths = totalDeathsInt - configurationManager.getLongValue("totalDeaths");
+            diffTotalRecovered = totalRecoveredInt - configurationManager.getLongValue("totalRecovered");
+            diffCurrentCases = currentCasesInt - configurationManager.getLongValue("currentCases");
+        }
+
+        System.out.println("Tweeting...");
+        String generatedTweet = "Coronavirus Update:\n☣️️ Total cases: "+totalCases+" ("+(diffTotalCases >= 0 ? "+"+diffTotalCases : diffTotalCases)+") ☣️️\n⚠️ Current cases: "+currentCases+" ("+(diffCurrentCases >= 0 ? "+"+diffCurrentCases : diffCurrentCases)+") ⚠️\n⚰️ Deaths: "+totalDeaths+" ("+(diffTotalDeaths >= 0 ? "+"+diffTotalDeaths : diffTotalDeaths)+") ⚰️\n\uD83C\uDFE5 Recovered: "+totalRecovered+" ("+(diffTotalRecovered >= 0 ? "+"+diffTotalRecovered : diffTotalRecovered)+") \uD83C\uDFE5\n\n(+/-X) : +/-X cases since last tweet\n#Coronavirus #COVID-19\nSource: https://worldometers.info/coronavirus/";
+        twitter.updateStatus(generatedTweet);
+
+        System.out.println(generatedTweet);
+        System.out.println("Saving data...");
+        configurationManager.setValue("totalCases", String.valueOf(totalCasesInt));
+        configurationManager.setValue("totalDeaths", String.valueOf(totalDeathsInt));
+        configurationManager.setValue("totalRecovered", String.valueOf(totalRecoveredInt));
+        configurationManager.setValue("currentCases", String.valueOf(currentCasesInt));
+        configurationManager.saveData();
+
+        System.out.println("Done!");
     }
 
     private static void loadConfig() {
@@ -58,6 +87,10 @@ public class CoronaVirusBOT  {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static int stringToInt(String integer){
+        return Integer.parseInt(integer.replace(",", ""));
     }
 
 }

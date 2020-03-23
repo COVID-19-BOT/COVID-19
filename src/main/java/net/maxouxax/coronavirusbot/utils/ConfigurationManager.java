@@ -59,6 +59,10 @@ public class ConfigurationManager {
         }
     }
 
+    public boolean isSet(String key){
+        return configKeys.containsKey(key);
+    }
+
     public String getStringValue(String key){
         return configKeys.get(key);
     }
@@ -67,5 +71,8 @@ public class ConfigurationManager {
         return Long.valueOf(configKeys.get(key));
     }
 
+    public void setValue(String key, String value){
+        configKeys.put(key, value);
+    }
 
 }
