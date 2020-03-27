@@ -4,16 +4,13 @@ import net.maxouxax.coronavirusbot.utils.ConfigurationManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.conf.ConfigurationBuilder;
 
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class CoronaVirusBOT  {
+public class CoronavirusBOT {
 
     private static ConfigurationManager configurationManager;
 
@@ -23,14 +20,14 @@ public class CoronaVirusBOT  {
         Document doc = Jsoup.connect("https://www.worldometers.info/coronavirus/").get();
         Elements webData = doc.select(".maincounter-number");
         System.out.println("Connecting to Twitter API...");
-        ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setDebugEnabled(true)
-                .setOAuthConsumerKey(configurationManager.getStringValue("oauthConsumerKey"))
-                .setOAuthConsumerSecret(configurationManager.getStringValue("oauthConsumerSecret"))
-                .setOAuthAccessToken(configurationManager.getStringValue("oauthAccessToken"))
-                .setOAuthAccessTokenSecret(configurationManager.getStringValue("oauthAccessTokenSecret"));
-        TwitterFactory tf = new TwitterFactory(cb.build());
-        Twitter twitter = tf.getInstance();
+        //ConfigurationBuilder cb = new ConfigurationBuilder();
+        //cb.setDebugEnabled(true)
+        //        .setOAuthConsumerKey(configurationManager.getStringValue("oauthConsumerKey"))
+        //        .setOAuthConsumerSecret(configurationManager.getStringValue("oauthConsumerSecret"))
+        //        .setOAuthAccessToken(configurationManager.getStringValue("oauthAccessToken"))
+        //        .setOAuthAccessTokenSecret(configurationManager.getStringValue("oauthAccessTokenSecret"));
+        //TwitterFactory tf = new TwitterFactory(cb.build());
+        //Twitter twitter = tf.getInstance();
         System.out.println("Connected to Twitter API succesfully !");
         System.out.println("Computing data for Twitter...");
         String totalCases = webData.get(0).text();
@@ -67,8 +64,8 @@ public class CoronaVirusBOT  {
 
         System.out.println("Tweeting...");
         String delay = (configurationManager.isSet("delayString") ? configurationManager.getStringValue("delayString") : "unknown");
-        String generatedTweet = "Coronavirus Update:\n☣️️ Total cases: "+totalCases+" ("+(diffTotalCases >= 0 ? "+"+diffTotalCases : diffTotalCases)+") ☣️️\n⚠️ Current cases: "+currentCases+" ("+(diffCurrentCases >= 0 ? "+"+diffCurrentCases : diffCurrentCases)+") ⚠️\n⚰️ Deaths: "+totalDeaths+" ("+(diffTotalDeaths >= 0 ? "+"+diffTotalDeaths : diffTotalDeaths)+") ⚰️\n\uD83C\uDFE5 Recovered: "+totalRecovered+" ("+(diffTotalRecovered >= 0 ? "+"+diffTotalRecovered : diffTotalRecovered)+") \uD83C\uDFE5\n\nUpdated every "+delay+"\n#Coronavirus #COVID19 #COVIDー19\nSource: https://worldometers.info/coronavirus/";
-        twitter.updateStatus(generatedTweet);
+        String generatedTweet = "Coronavirus Update:\n☣️️ Total cases: "+totalCases+" ("+(diffTotalCases >= 0 ? "+"+formatter.format(diffTotalCases) : formatter.format(diffTotalCases))+") ☣️️\n⚠️ Current cases: "+currentCases+" ("+(diffCurrentCases >= 0 ? "+"+formatter.format(diffCurrentCases) : formatter.format(diffCurrentCases))+") ⚠️\n⚰️ Deaths: "+totalDeaths+" ("+(diffTotalDeaths >= 0 ? "+"+formatter.format(diffTotalDeaths) : formatter.format(diffTotalDeaths))+") ⚰️\n\uD83C\uDFE5 Recovered: "+totalRecovered+" ("+(diffTotalRecovered >= 0 ? "+"+formatter.format(diffTotalRecovered) : formatter.format(diffTotalRecovered))+") \uD83C\uDFE5\n\nUpdated every "+delay+"\n#Coronavirus #COVID19 #COVIDー19\nSource: https://worldometers.info/coronavirus/";
+        //twitter.updateStatus(generatedTweet);
 
         System.out.println(generatedTweet);
         System.out.println("Saving data...");
